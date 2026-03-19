@@ -5,6 +5,8 @@ from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+from langchain_core.chat_history import InMemoryChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
 import os
 
 load_dotenv()
@@ -58,15 +60,30 @@ prompt_DP = ChatPromptTemplate.from_messages(
 cadeia = prompt_DP | modelo | StrOutputParser()
 
 memoria = {}
+sessao = "dp_ia"
+
+def historico_por_sessao(sessao: str):
+    if sessao not in memoria:
+        memoria[sessao] = InMemoryChatMessageHistory()
+    return memoria[sessao]
+    
+
+cadeia_com_memoria = RunnableWithMessageHistory(
+    runnable=cadeia, #define a cadeia que será executada, especificando o fluxo de processamento
+    get_session_history=historico_por_sessao, #recupera o histórico da conversa atual para manter o contexto
+    input_messages_key="query", #define a chave que identifica a entrada do usuário na mensagem
+    history_messages_key="historico" #define a chave onde o histórico da conversa será armazenado e atualizado
+)
 
 def responder_human(pergunta:str):
     trechos = dados_recuperados.invoke(pergunta)
     contexto = "\n\n".join(um_trecho.page_content for um_trecho in trechos)
-    return cadeia.invoke(
+    return cadeia_com_memoria.invoke(
         {
             "query": pergunta,
             "contexto": contexto
-        }
+        },
+        config={"session_id": sessao}
     )
 
 print("CHAT DP")
