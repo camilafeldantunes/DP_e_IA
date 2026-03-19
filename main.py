@@ -44,16 +44,20 @@ dados_recuperados = FAISS.from_documents(
 
 prompt_DP = ChatPromptTemplate.from_messages(
     [
-        ("system", """Você é um especialista em Departamento Pessoal extremamente educado e responsável. Responda as perguntas
-         utilizando somente o conteúdo fornecido. Se você não souber a resposta
-         responda assim: 'Me desculpe pelo inconveniente, mas não posso responder essa questão, por favor, entre em contato com o
-         time de DP para que eles te expliquem da melhor maneira possível'"""),
+        ("system", """Você é um especialista em Departamento Pessoal extremamente educado e responsável. 
+         Responda utilizando apenas o contexto fornecido.
+         Se a resposta estiver claramente presente no contexto, responda de forma direta e objetiva.
+         Se a resposta não estiver explícita, mas puder ser deduzida com base nas informações disponíveis, responda de forma cuidadosa, deixando claro que é uma inferência.
+         Caso a informação não esteja presente nem possa ser inferida com segurança, responda educadamente que não é possível responder com base no conteúdo fornecido e oriente o usuário a entrar em contato com o time de Departamento Pessoal."""),
+        ("placeholder", "{historico}"),
         ("human", "{query} \n\n Contexto: {contexto} \n\n Resposta: ")
     ]
 )
 
 
 cadeia = prompt_DP | modelo | StrOutputParser()
+
+memoria = {}
 
 def responder_human(pergunta:str):
     trechos = dados_recuperados.invoke(pergunta)
@@ -65,4 +69,13 @@ def responder_human(pergunta:str):
         }
     )
 
-print(responder_human("Como funciona o pagamento das férias?"))
+print("CHAT DP")
+while True:
+    perguntas_usuario = input("Faça a sua pergunta para o ChatBot ou digite 0 para finalizar \n")
+    if(perguntas_usuario == '0'):
+        print("Adeus fofa!!")
+        break
+    respostas = responder_human(perguntas_usuario)
+    print(respostas)
+
+    
