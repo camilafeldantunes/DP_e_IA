@@ -60,3 +60,8 @@ OPENAI_API_KEY=sua_chave_aqui
 ```
 
 5. Rodar o projeto
+
+## ⚠️ Segurança
+* Nunca exponha sua chave da API no código
+* Utilize variáveis de ambiente `(.env)`
+* O arquivo `.env` deve estar no `.gitignore`
