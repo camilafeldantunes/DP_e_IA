@@ -22,3 +22,41 @@ A aplicação lê documentos (PDFs) e fornece respostas contextualizadas com bas
 * Streamlit
 * PyPDF
 
+## 📂 Estrutura do Projeto
+
+```
+DP_e_IA/
+│
+├── documentos/            # PDFs usados no RAG
+├── langchain/
+|── main.py                # Aplicação principal
+├── requirements.txt
+├── .env                  # Chave da API (não subir!)
+└── README.md
+```
+
+## Como executar o projeto
+
+1. Clone o repositório
+```
+git clone https://github.com/seu-usuario/seu-repo.git
+```
+
+2. Criar ambiente virtual
+```
+python -m venv venv 
+source venv/bin/activate  # Mac/Linux 
+```
+
+3. Instalar dependências
+```
+pip install -r requirements.txt
+```
+
+4. Configurar variável de ambiente
+
+```
+OPENAI_API_KEY=sua_chave_aqui
+```
+
+5. Rodar o projeto
