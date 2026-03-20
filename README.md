@@ -1,2 +1,7 @@
-# DP_e_IA
-Utilizando RAG e modelos de LLM para responder perguntas sobre o Departamento Pessoal
+# DP e IA – Chatbot Inteligente para Departamento Pessoal
+## Descrição
+Sistema inteligente que utiliza IA + RAG (Retrieval-Augmented Generation) para responder dúvidas relacionadas ao Departamento Pessoal, como:
+⏰ Controle de ponto
+💰 Benefícios (VT, VA, VR, plano de saúde, etc.)
+🌴 Férias
+A aplicação lê documentos (PDFs) e fornece respostas contextualizadas com base nas políticas da empresa.
