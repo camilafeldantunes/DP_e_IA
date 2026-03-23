@@ -97,6 +97,7 @@ while True:
         print("Adeus fofa!!")
         break
     respostas = responder_human(perguntas_usuario)
+    print("Fonte: ", doc.metadata.get('fonte', 'N/A'))
     print(respostas)
 
     
