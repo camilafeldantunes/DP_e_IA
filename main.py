@@ -27,12 +27,16 @@ arquivos = [
     "documentos/Regras_Férias.pdf"
 ] ##trazendo os arquivos em pdfs
 
-documentos = sum(
-    [
-        PyPDFLoader(arquivo).load() for arquivo in arquivos
-    ], []
-) ## Aqui juntamos todos os pdfs em uma lista, os arquivos entram no for e viram uma 
-##lista de páginas e depois através da sum() eles se transformam em uma única lista
+documentos = []
+for arquivo in arquivos:
+    docs = PyPDFLoader(arquivo).load()
+    nome_doc = arquivo.split("/")[-1].replace(".pdf", "")
+    for doc in docs:
+        doc.metadata["fonte"] = nome_doc
+    documentos.extend(docs)
+## Aqui juntamos todos os pdfs em uma lista, os arquivos entram no for e viram uma 
+##lista de páginas. Também em cada página colocamos um metadado que diz de qual fonte
+## pdf ele veio. E por fim extendemos toda essa lista para documentos
 
 pedacos = RecursiveCharacterTextSplitter(
     chunk_size = 1000, chunk_overlap = 100
