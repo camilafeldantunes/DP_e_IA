@@ -106,5 +106,6 @@ while True:
     
     print(respostas)
     print("Fonte: ", fontes)
+    print("")
 
     
