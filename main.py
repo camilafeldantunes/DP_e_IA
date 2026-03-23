@@ -103,7 +103,8 @@ while True:
         print("Adeus fofa!!")
         break
     respostas, fontes = responder_human(perguntas_usuario)
-    print("Fonte: ", fontes)
+    
     print(respostas)
+    print("Fonte: ", fontes)
 
     
