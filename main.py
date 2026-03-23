@@ -42,11 +42,13 @@ pedacos = RecursiveCharacterTextSplitter(
     chunk_size = 1000, chunk_overlap = 100
 ).split_documents(documentos) ##nesse trecho quebramos aquela lista de documentos em pedaços menores
 ##onde cada pedaço tem 1000 caracteres e ele tem uma redundância de 100, para não perder o contexto da frase
-
+    
 dados_recuperados = FAISS.from_documents(
     pedacos, embeddings
 ).as_retriever() ##nessa parte utilizamos o FAISS para transformar os pedaços em índices vetoriais utilizando embeddings e 
 ## depois o as_retriver() realiza uma pesquisa e junta os 4 vetores que mais são semelhantes
+
+
 
 prompt_DP = ChatPromptTemplate.from_messages(
     [
@@ -82,13 +84,17 @@ cadeia_com_memoria = RunnableWithMessageHistory(
 def responder_human(pergunta:str):
     trechos = dados_recuperados.invoke(pergunta)
     contexto = "\n\n".join(um_trecho.page_content for um_trecho in trechos)
-    return cadeia_com_memoria.invoke(
+    respostas = cadeia_com_memoria.invoke(
         {
             "query": pergunta,
             "contexto": contexto
         },
         config={"session_id": sessao}
     )
+    fontes = trechos[0].metadata.get('fonte', 'N/A')
+    return respostas, fontes
+
+
 
 print("CHAT DP")
 while True:
@@ -96,8 +102,8 @@ while True:
     if(perguntas_usuario == '0'):
         print("Adeus fofa!!")
         break
-    respostas = responder_human(perguntas_usuario)
-    print("Fonte: ", doc.metadata.get('fonte', 'N/A'))
+    respostas, fontes = responder_human(perguntas_usuario)
+    print("Fonte: ", fontes)
     print(respostas)
 
     
