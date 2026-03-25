@@ -82,6 +82,7 @@ cadeia_com_memoria = RunnableWithMessageHistory(
     history_messages_key="historico" #define a chave onde o histórico da conversa será armazenado e atualizado
 )
 
+
 def responder_human(pergunta:str):
     trechos = dados_recuperados.invoke(pergunta)
     contexto = "\n\n".join(um_trecho.page_content for um_trecho in trechos)
@@ -96,17 +97,22 @@ def responder_human(pergunta:str):
     return respostas, fontes
 
 
+## INTERFACE DO ROBO DP
 
-print("CHAT DP")
-while True:
-    perguntas_usuario = input("Faça a sua pergunta para o ChatBot ou digite 0 para finalizar \n")
-    if(perguntas_usuario == '0'):
-        print("Adeus fofa!!")
-        break
-    respostas, fontes = responder_human(perguntas_usuario)
+
+
+st.set_page_config(page_title="CHATBOT Departamento Pessoal", layout="wide")
+st.title("🤖 Agente de DP — Políticas Internas")
+pergunta = st.chat_input("Digite sua pergunta")
+
+if pergunta:
+    with st.spinner("Consultando políticas internas..."):
+        respostas, fontes = responder_human(pergunta)
+
+        st.subheader("Resposta")
+        st.write(respostas)
+
     
-    print(respostas)
-    print("Fonte: ", fontes)
-    print("")
+
 
     
