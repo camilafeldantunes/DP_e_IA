@@ -99,20 +99,48 @@ def responder_human(pergunta:str):
 
 ## INTERFACE DO ROBO DP
 
-
-
 st.set_page_config(page_title="CHATBOT Departamento Pessoal", layout="wide")
 st.title("🤖 Agente de DP — Políticas Internas")
+
+# histórico
+if "mensagens" not in st.session_state:
+    st.session_state.mensagens = []
+
+# mostra histórico
+for msg in st.session_state.mensagens:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+# input
 pergunta = st.chat_input("Digite sua pergunta")
 
 if pergunta:
-    with st.spinner("Consultando políticas internas..."):
-        respostas, fontes = responder_human(pergunta)
+    # mostra pergunta na hora
+    with st.chat_message("user"):
+        st.markdown(pergunta)
 
-        st.subheader("Resposta")
-        st.write(respostas)
+    # salva pergunta
+    st.session_state.mensagens.append({
+        "role": "user",
+        "content": pergunta
+    })
 
-    
+    # resposta
+    with st.chat_message("assistant"):
+        with st.spinner("Consultando políticas internas..."):
+            resposta, fontes = responder_human(pergunta)
+
+            st.markdown(resposta)
+
+            # fontes
+            with st.expander("📄 Ver fontes"):
+                st.markdown(fontes)
+
+    # salva resposta
+    st.session_state.mensagens.append({
+        "role": "assistant",
+        "content": resposta
+    })
 
 
     
